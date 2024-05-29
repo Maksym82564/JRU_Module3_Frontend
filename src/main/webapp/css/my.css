@@ -1,0 +1,13 @@
+.character-table {
+    border: 1px solid black;
+}
+
+.character-table-header {
+    border: 1px solid black;
+    min-width: 80px;
+    padding: 5px;
+}
+
+.character-cell {
+    border: 1px solid black;
+}
