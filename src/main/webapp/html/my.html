@@ -3,11 +3,17 @@
     <title>RPG</title>
     <script src=https://code.jquery.com/jquery-3.6.0.min.js></script>
     <link href="/css/my.css" rel="stylesheet">
-    <script type="text/javascript" src="/html/script.js"></script>
+    <script defer type="text/javascript" src="/html/script.js"></script>
 </head>
 <body>
 <h1>RPG admin panel</h1>
 <h2>Accounts list:</h2>
+
+<div class="accounts-per-page-wrapper">
+    <label for="accounts-per-page">Count per page:</label>
+    <select class="accounts-per-page" id="accounts-per-page"></select>
+</div>
+
 <table class="character-table">
     <thead>
     <tr>
