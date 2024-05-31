@@ -11,3 +11,7 @@
 .character-cell {
     border: 1px solid black;
 }
+
+.selected-pagination-button {
+    color: red;
+}
