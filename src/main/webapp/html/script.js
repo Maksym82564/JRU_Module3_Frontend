@@ -14,20 +14,20 @@ function fillTable(pageNumber, pageSize) {
         players.forEach((player) => {
             htmlRows +=
                 `<tr class="table-row" data-account-id="${player.id}">
-                    <td class="character-cell">${player.id}</td>
-                    <td class="character-cell">${player.name}</td>
-                    <td class="character-cell">${player.title}</td>
-                    <td class="character-cell">${player.race}</td>
-                    <td class="character-cell">${player.profession}</td>
-                    <td class="character-cell">${player.level}</td>
-                    <td class="character-cell">${new Date(player.birthday).toLocaleDateString('uk')}</td>
-                    <td class="character-cell">${player.banned}</td>
-                    <td class="character-cell">
+                    <td class="player-cell">${player.id}</td>
+                    <td class="player-cell">${player.name}</td>
+                    <td class="player-cell">${player.title}</td>
+                    <td class="player-cell">${player.race}</td>
+                    <td class="player-cell">${player.profession}</td>
+                    <td class="player-cell">${player.level}</td>
+                    <td class="player-cell">${new Date(player.birthday).toLocaleDateString('uk')}</td>
+                    <td class="player-cell">${player.banned}</td>
+                    <td class="player-cell">
                         <button class="edit-button" value="${player.id}">
                         <img class="edit-image" src="../img/edit.png" alt="edit"
                         </button>
                     </td>
-                    <td class="character-cell">
+                    <td class="player-cell">
                         <button class="delete-button" value="${player.id}">
                         <img class="delete-image" src="../img/delete.png" alt="delete"
                         </button>
@@ -118,11 +118,10 @@ function onPageChange(e) {
 
     currentPageNumber = targetPageIndex;
     fillTable(currentPageNumber, playersPerPage);
-    changeActiveButton(currentPageNumber);
 }
 
 function changeActiveButton(activePageButton = 0) {
-    const $paginationButtons = document.querySelector('.pagination-buttons');
+    const $paginationButtons = $('.pagination-buttons')[0];
     const $targetButton = Array.from($paginationButtons.children)[activePageButton];
     const $currentActiveButton = Array.from($paginationButtons.children)[currentPageNumber];
 
