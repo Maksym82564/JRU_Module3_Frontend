@@ -13,7 +13,7 @@ function fillTable(pageNumber, pageSize) {
         let htmlRows = '';
         players.forEach((player) => {
             htmlRows +=
-                `<tr>
+                `<tr class="table-row" data-account-id="${player.id}">
                     <td class="character-cell">${player.id}</td>
                     <td class="character-cell">${player.name}</td>
                     <td class="character-cell">${player.title}</td>
@@ -22,12 +22,28 @@ function fillTable(pageNumber, pageSize) {
                     <td class="character-cell">${player.level}</td>
                     <td class="character-cell">${player.birthday}</td>
                     <td class="character-cell">${player.banned}</td>
+                    <td class="character-cell">
+                        <button class="edit-button" value="${player.id}">
+                        <img class="edit-image" src="../img/edit.png" alt="edit"
+                        </button>
+                    </td>
+                    <td class="character-cell">
+                        <button class="delete-button" value="${player.id}">
+                        <img class="delete-image" src="../img/delete.png" alt="delete"
+                        </button>
+                    </td>
                 </tr>`
         })
 
         Array.from($playersTableBody.children).forEach(row => row.remove());
 
         $playersTableBody.insertAdjacentHTML("beforeend",htmlRows);
+
+        const $deleteButtons = $('.delete-button').toArray();
+        $deleteButtons.forEach(button => button.addEventListener('click', deleteAccountHandler));
+
+        const $editButtons = $('.edit-button').toArray();
+        $editButtons.forEach(button => button.addEventListener('click', editAccountHandler));
     })
 }
 
@@ -112,4 +128,27 @@ function changeActiveButton(activePageButton = 0) {
 
     $currentActiveButton.classList.remove('selected-pagination-button');
     $targetButton.classList.add('selected-pagination-button');
+}
+
+function deleteAccountHandler(e) {
+    const accountId = e.currentTarget.value;
+
+    $.ajax({
+        url: `/rest/players/${accountId}`,
+        type: 'DELETE',
+        success: function () {
+            getPlayersCount();
+            currentPageNumber = currentPageNumber > 0 ? currentPageNumber - 1 : 0;
+            fillTable(currentPageNumber, playersPerPage)
+        }
+    })
+}
+
+function editAccountHandler(e) {
+    const accountId = e.currentTarget.value;
+
+    const $currentRow = $(`.table-row[data-account-id='${accountId}']`);
+    const $currentImage = $currentRow.find('.edit-button img');
+
+    $currentImage.attr('src',"../img/save.png");
 }
