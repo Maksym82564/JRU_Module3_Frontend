@@ -20,7 +20,7 @@ function fillTable(pageNumber, pageSize) {
                     <td class="character-cell">${player.race}</td>
                     <td class="character-cell">${player.profession}</td>
                     <td class="character-cell">${player.level}</td>
-                    <td class="character-cell">${player.birthday}</td>
+                    <td class="character-cell">${new Date(player.birthday).toLocaleDateString('uk')}</td>
                     <td class="character-cell">${player.banned}</td>
                     <td class="character-cell">
                         <button class="edit-button" value="${player.id}">
