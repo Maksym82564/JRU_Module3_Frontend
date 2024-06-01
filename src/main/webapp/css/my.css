@@ -19,3 +19,7 @@
 .auto-width-cell {
     min-width: auto;
 }
+
+.hidden {
+    visibility: hidden;
+}
