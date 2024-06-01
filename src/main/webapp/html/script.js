@@ -3,8 +3,12 @@ let playersPerPage = 3;
 let playersAmount = 0;
 let currentPageNumber = 0;
 
+const PROFESSION = ['WARRIOR', 'ROGUE', 'SORCERER', 'CLERIC', 'PALADIN', 'NAZGUL', 'WARLOCK', 'DRUID'];
+const RACE = ['HUMAN', 'DWARF', 'ELF', 'GIANT', 'ORC', 'TROLL', 'HOBBIT'];
+const BANNED = ['true', 'false'];
+
 createAccountPerPageDropDown();
-fillTable(0, playersPerPage);
+fillTable(currentPageNumber, playersPerPage);
 getPlayersCount();
 
 function fillTable(pageNumber, pageSize) {
@@ -15,13 +19,13 @@ function fillTable(pageNumber, pageSize) {
             htmlRows +=
                 `<tr class="table-row" data-account-id="${player.id}">
                     <td class="player-cell">${player.id}</td>
-                    <td class="player-cell">${player.name}</td>
-                    <td class="player-cell">${player.title}</td>
-                    <td class="player-cell">${player.race}</td>
-                    <td class="player-cell">${player.profession}</td>
-                    <td class="player-cell">${player.level}</td>
-                    <td class="player-cell">${new Date(player.birthday).toLocaleDateString('uk')}</td>
-                    <td class="player-cell">${player.banned}</td>
+                    <td class="player-cell player-name" >${player.name}</td>
+                    <td class="player-cell player-title">${player.title}</td>
+                    <td class="player-cell player-race" >${player.race}</td>
+                    <td class="player-cell player-profession">${player.profession}</td>
+                    <td class="player-cell player-level">${player.level}</td>
+                    <td class="player-cell player-birthday">${new Date(player.birthday).toLocaleDateString('uk')}</td>
+                    <td class="player-cell player-banned">${player.banned}</td>
                     <td class="player-cell">
                         <button class="edit-button" value="${player.id}">
                         <img class="edit-image" src="../img/edit.png" alt="edit"
@@ -143,11 +147,80 @@ function deleteAccountHandler(e) {
     })
 }
 
+function updatePlayer({accountId, data}) {
+    $.ajax({
+        url: `/rest/players/${accountId}`,
+        type: 'POST',
+        data: JSON.stringify(data),
+        dataType: "json",
+        contentType: 'application/json',
+        success: function () {
+            getPlayersCount();
+            fillTable(currentPageNumber, playersPerPage);
+        }
+    })
+}
+
+function createInput(value) {
+    const $htmlInputElement = document.createElement('input');
+
+    $htmlInputElement.setAttribute('type', 'text');
+    $htmlInputElement.setAttribute('value', value);
+    $htmlInputElement.setAttribute('data-value', value);
+
+    $htmlInputElement.addEventListener('input', e => {
+        $htmlInputElement.setAttribute('data-value', e.currentTarget.value);
+    })
+
+    return $htmlInputElement;
+}
+
+function createSelect(optionsArray, defaultValue) {
+    const $options = createSelectOptions(optionsArray, defaultValue);
+    const $selectElement = document.createElement('select');
+
+    $selectElement.insertAdjacentHTML('afterbegin', $options);
+    $selectElement.setAttribute('data-value', defaultValue);
+    $selectElement.addEventListener('change', e => {
+        $selectElement.setAttribute('data-value', e.target.value);
+    });
+
+    return $selectElement;
+}
+
 function editAccountHandler(e) {
     const accountId = e.currentTarget.value;
 
     const $currentRow = $(`.table-row[data-account-id='${accountId}']`);
     const $currentImage = $currentRow.find('.edit-button img');
+    const $currentDeleteButton = $currentRow.find('.delete-button');
+
+    const $currentName = $currentRow.find('.player-name');
+    const $currentRace = $currentRow.find('.player-race');
+    const $currentTitle = $currentRow.find('.player-title');
+    const $currentProfession = $currentRow.find('.player-profession');
+    const $currentBanned = $currentRow.find('.player-banned');
 
     $currentImage.attr('src',"../img/save.png");
+    $currentImage.on('click', () => {
+        const params = {
+            accountId : accountId,
+            data: {
+                name: $currentName.children().data('value'),
+                race: $currentRace.children().data('value'),
+                profession: $currentProfession.children().data('value'),
+                banned: $currentBanned.children().data('value'),
+                title: $currentTitle.children().data('value'),
+            }
+        };
+        updatePlayer(params);
+    });
+    $currentDeleteButton.addClass('hidden');
+
+
+    $currentName.html(createInput($currentName.html()));
+    $currentRace.html(createSelect(RACE, $currentRace.html()));
+    $currentTitle.html(createInput($currentTitle.html()));
+    $currentProfession.html(createSelect(PROFESSION, $currentProfession.html()));
+    $currentBanned.html(createSelect(BANNED, $currentBanned.html()));
 }
