@@ -1,5 +1,6 @@
 .player-table {
     border: 1px solid black;
+    border-collapse: collapse;
 }
 
 .player-table-header {
@@ -22,4 +23,41 @@
 
 .hidden {
     visibility: hidden;
+}
+
+.pagination-wrapper {
+    margin: 15px 0;
+}
+
+.accounts-per-page-wrapper {
+    margin: 15px 0;
+}
+
+button {
+    background-color: white;
+    border: none;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.create-form {
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 300px;
+    box-sizing: border-box;
+}
+
+.create-field {
+    display: flex;
+    justify-content: space-between;
+    justify-items: center;
+    margin-bottom: 10px;
+}
+
+.save-button {
+    display: block;
+    margin: 20px auto 0 auto;
 }
