@@ -8,8 +8,19 @@ const RACE = ['HUMAN', 'DWARF', 'ELF', 'GIANT', 'ORC', 'TROLL', 'HOBBIT'];
 const BANNED = ['true', 'false'];
 
 createAccountPerPageDropDown();
+initCreateForm();
 fillTable(currentPageNumber, playersPerPage);
 getPlayersCount();
+
+function initCreateForm() {
+    const $raceSelect = document.querySelector('[data-create-race]');
+    const $professionSelect = document.querySelector('[data-create-profession]');
+    const $bannedSelect = document.querySelector('[data-create-banned]');
+
+    $raceSelect.insertAdjacentHTML('afterbegin', createSelectOptions(RACE, RACE[0]));
+    $professionSelect.insertAdjacentHTML('afterbegin', createSelectOptions(PROFESSION, PROFESSION[0]));
+    $bannedSelect.insertAdjacentHTML('afterbegin', createSelectOptions(BANNED, BANNED[0]));
+}
 
 function fillTable(pageNumber, pageSize) {
     $.get(`rest/players?pageNumber=${pageNumber}&pageSize=${pageSize}`, (players) => {
@@ -28,12 +39,12 @@ function fillTable(pageNumber, pageSize) {
                     <td class="player-cell player-banned">${player.banned}</td>
                     <td class="player-cell">
                         <button class="edit-button" value="${player.id}">
-                        <img class="edit-image" src="../img/edit.png" alt="edit"
+                        <img class="edit-image" src="../img/edit.png" alt="edit">
                         </button>
                     </td>
                     <td class="player-cell">
                         <button class="delete-button" value="${player.id}">
-                        <img class="delete-image" src="../img/delete.png" alt="delete"
+                        <img class="delete-image" src="../img/delete.png" alt="delete">
                         </button>
                     </td>
                 </tr>`
@@ -133,6 +144,30 @@ function changeActiveButton(activePageButton = 0) {
     $targetButton.classList.add('selected-pagination-button');
 }
 
+function createPlayer() {
+    const data= {
+        name: $('[data-create-name]').val(),
+        title: $('[data-create-title]').val(),
+        race: $('[data-create-race]').val(),
+        profession: $('[data-create-profession]').val(),
+        level: $('[data-create-level]').val(),
+        birthday: new Date($('[data-create-birthday]').val()).getTime(),
+        banned: $('[data-create-banned]').val(),
+    }
+
+    $.ajax({
+        url: `/rest/players`,
+        type: 'POST',
+        data: JSON.stringify(data),
+        dataType: "json",
+        contentType: 'application/json',
+        success: function () {
+            getPlayersCount();
+            fillTable(currentPageNumber, playersPerPage);
+        }
+    })
+}
+
 function deleteAccountHandler(e) {
     const accountId = e.currentTarget.value;
 
@@ -216,7 +251,6 @@ function editAccountHandler(e) {
         updatePlayer(params);
     });
     $currentDeleteButton.addClass('hidden');
-
 
     $currentName.html(createInput($currentName.html()));
     $currentRace.html(createSelect(RACE, $currentRace.html()));
