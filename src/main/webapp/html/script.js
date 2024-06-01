@@ -164,6 +164,7 @@ function createPlayer() {
         success: function () {
             getPlayersCount();
             fillTable(currentPageNumber, playersPerPage);
+            clearFormFields();
         }
     })
 }
@@ -257,4 +258,14 @@ function editAccountHandler(e) {
     $currentTitle.html(createInput($currentTitle.html()));
     $currentProfession.html(createSelect(PROFESSION, $currentProfession.html()));
     $currentBanned.html(createSelect(BANNED, $currentBanned.html()));
+}
+
+function clearFormFields() {
+    $('[data-create-name]').val('');
+    $('[data-create-title]').val('');
+    $('[data-create-race]').val('');
+    $('[data-create-profession]').val('');
+    $('[data-create-level]').val('');
+    $('[data-create-birthday]').val('');
+    $('[data-create-banned]').val('');
 }
